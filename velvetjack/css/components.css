@@ -1,0 +1,364 @@
+/* Cards */
+.card {
+  width: 100px;
+  height: 140px;
+  background-color: transparent; /* Container is transparent */
+  border-radius: var(--border-radius-md);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: var(--font-serif);
+  font-weight: bold;
+  font-size: 1.2rem;
+  user-select: none;
+  perspective: 1000px; /* For 3D flip */
+  margin: 0 -30px; /* Overlap cards */
+  transition: transform var(--transition-normal), margin var(--transition-normal);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform-style: preserve-3d;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--border-radius-md);
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-face, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+}
+
+.card-face {
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px;
+  transform: rotateY(180deg); /* Face is actually the "back" in 3D space if we start flipped, but usually we start face up. 
+                                Let's stick to standard: Front is face, Back is back. 
+                                Wait, standard flip is: Back is visible (0deg), Front is hidden (180deg)? 
+                                Or Front visible (0deg), Back hidden (180deg)?
+                                
+                                Requirement: "Dealer second card is face-down."
+                                So for hidden card: Back visible.
+                                
+                                Let's define:
+                                .card-face (the value side) -> transform: rotateY(0deg) normally.
+                                .card-back (the pattern side) -> transform: rotateY(180deg).
+                                
+                                If hidden: .card-inner -> transform: rotateY(180deg).
+                                */
+  transform: rotateY(0deg);
+  z-index: 2;
+}
+
+.card-back {
+  background: repeating-linear-gradient(
+    45deg,
+    #0d1b2a,
+    #0d1b2a 10px,
+    #1b263b 10px,
+    #1b263b 20px
+  );
+  border: 2px solid #d4af37; /* Gold border for premium feel */
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back::after {
+  content: 'VJ';
+  font-family: var(--font-serif);
+  color: rgba(212, 175, 55, 0.2);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Secure Hidden Card State - When we don't want the DOM to even have the value */
+.card.secure-hidden .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Red/Black Colors */
+.card.red .card-face { color: #d32f2f; }
+.card.black .card-face { color: #212121; }
+
+.card-value-top { align-self: flex-start; line-height: 1; }
+.card-suit-center { align-self: center; font-size: 2.5rem; line-height: 1; }
+.card-value-bottom { align-self: flex-end; transform: rotate(180deg); line-height: 1; }
+
+/* Shuffle Modal */
+.shuffle-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.shuffle-modal.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.shuffle-text {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--color-accent);
+  margin-top: var(--spacing-lg);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  animation: pulse-gold 2s infinite;
+}
+
+.shuffle-animation-container {
+  position: relative;
+  width: 120px;
+  height: 160px;
+}
+
+.shuffle-card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, #0d1b2a, #0d1b2a 10px, #1b263b 10px, #1b263b 20px);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+/* Deck Counter */
+.deck-counter {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  background: rgba(0,0,0,0.5);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.deck-counter.low {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+
+/* Chips */
+.chip {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px dashed white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-family: var(--font-mono, monospace);
+  color: white;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
+  user-select: none;
+}
+
+.chip:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.chip.selected {
+  box-shadow: 0 0 0 4px var(--color-accent);
+}
+
+/* Chip Colors based on value */
+.chip[data-value="1"] { background: #ffffff; color: #333; border-color: #333; }
+.chip[data-value="5"] { background: #d32f2f; }
+.chip[data-value="10"] { background: #1976d2; }
+.chip[data-value="25"] { background: #388e3c; }
+.chip[data-value="100"] { background: #212121; border-color: #d4af37; }
+.chip[data-value="500"] { background: #7b1fa2; }
+.chip[data-value="1000"] { background: #fbc02d; color: #333; }
+.chip[data-value="5000"] { background: #e64a19; border: 4px solid gold; }
+
+/* Buttons */
+.btn {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-bg-dark);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-accent-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--color-text-muted);
+  color: var(--color-text);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--color-text);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-action {
+  min-width: 120px;
+  height: 48px;
+  font-size: 1rem;
+}
+
+/* Stats Panel */
+.stat-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+}
+
+.stat-value {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--color-accent);
+}
+
+.stat-value.large {
+  font-size: 2rem;
+}
+
+/* Modal */
+.modal {
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  max-width: 500px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.9);
+  opacity: 0;
+  transition: all var(--transition-normal);
+}
+
+.modal-overlay.visible .modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: var(--spacing-md);
+}
+
+.modal-body {
+  margin-bottom: var(--spacing-lg);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+/* Hand Container */
+.hand-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+  perspective: 1000px;
+}
+
+.hand-total {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  margin-top: var(--spacing-sm);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Result Overlay */
+.result-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.result-overlay.visible {
+  opacity: 1;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.result-win { color: var(--color-accent); }
+.result-loss { color: var(--color-error); }
+.result-push { color: var(--color-text-muted); }
+.result-blackjack { 
+  color: var(--color-accent);
+  text-shadow: 0 0 20px var(--color-accent);
+}

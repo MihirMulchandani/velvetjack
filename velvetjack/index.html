@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VelvetJack | Premium Blackjack Simulator</title>
+  <meta name="description" content="A premium, enterprise-grade 2D web-based blackjack simulator.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Top: Dealer -->
+    <section class="dealer-area">
+      <div id="dealer-hand" class="hand-container">
+        <!-- Cards injected here -->
+      </div>
+      <div class="hand-total hidden" id="dealer-total">0</div>
+    </section>
+
+    <!-- Middle: Player -->
+    <section class="player-area">
+      <div id="player-hand" class="hand-container">
+        <!-- Cards injected here -->
+      </div>
+      <div class="hand-total hidden" id="player-total">0</div>
+      
+      <div class="betting-circle-container">
+        <span id="bet-display">$0</span>
+      </div>
+    </section>
+
+    <!-- Right: Sidebar -->
+    <aside class="sidebar" id="stats-panel">
+      <!-- Stats injected here -->
+    </aside>
+
+    <!-- Bottom: Controls -->
+    <section class="controls-area">
+      <div class="bankroll-container">
+        <span class="stat-label">Bankroll</span>
+        <span class="stat-value large" id="bankroll-display">$10,000</span>
+      </div>
+
+      <div class="chip-selector hidden">
+        <!-- Chips injected here -->
+      </div>
+
+      <div class="action-buttons">
+        <button id="btn-deal" class="btn btn-primary btn-action hidden">Deal</button>
+        <button id="btn-hit" class="btn btn-secondary btn-action hidden">Hit</button>
+        <button id="btn-stand" class="btn btn-secondary btn-action hidden">Stand</button>
+        <button id="btn-undo" class="btn btn-secondary btn-action hidden">Undo</button>
+        <button id="btn-clear" class="btn btn-secondary btn-action hidden">Clear</button>
+      </div>
+    </section>
+
+    <!-- Overlays -->
+    <div id="result-overlay" class="result-overlay"></div>
+    
+    <!-- Shuffle Modal -->
+    <div id="shuffle-modal" class="shuffle-modal">
+      <div class="shuffle-animation-container">
+        <div class="shuffle-card animate-shuffle-left"></div>
+        <div class="shuffle-card animate-shuffle-right"></div>
+        <div class="shuffle-card animate-shuffle-middle"></div>
+      </div>
+      <div class="shuffle-text">Shuffling Cards...</div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal" id="modal-content">
+        <!-- Modal content -->
+      </div>
+    </div>
+
+    <!-- Deck Counter -->
+    <div id="deck-counter" class="deck-counter hidden">Deck: 52</div>
+  </div>
+
+  <footer style="position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: rgba(255,255,255,0.3); text-align: right;">
+    VelvetJack v1.0.0 | 1-Deck Shoe | Simulated Experience | No Real Money
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
